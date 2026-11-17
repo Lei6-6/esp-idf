@@ -27,6 +27,10 @@ jobs:
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: blink_firmware
-          path: examples/get-started/blink/build/blink.bin
+          name: blink_flash_bundle
+          path: 
+            examples/get-started/blink/build/blink.bin
+            examples/get-started/blink/build/bootloader/bootloader.bin
+            examples/get-started/blink/build/partition_table/partition-table.bin
+            examples/get-started/blink/build/flash_args
           if-no-files-found: error
