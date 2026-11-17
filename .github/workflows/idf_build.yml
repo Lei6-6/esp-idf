@@ -24,13 +24,24 @@ jobs:
           target: esp32c3
           path: examples/get-started/blink
 
+
+      - name: Prepare Blink flash bundle
+        shell: bash
+        working-directory: examples/get-started/blink/build
+        run: |
+          bundle="$RUNNER_TEMP/blink_flash_bundle"
+          mkdir -p "$bundle"
+
+          for file in blink.bin flash_args bootloader/bootloader.bin partition_table/partition-table.bin; do
+            if [ ! -f "$file" ]; then
+              echo "::error::Missing build file: $PWD/$file"
+              exit 1
+            fi
+            cp --parents "$file" "$bundle/"
+          done
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: blink_flash_bundle
-          path: 
-            examples/get-started/blink/build/blink.bin
-            examples/get-started/blink/build/bootloader/bootloader.bin
-            examples/get-started/blink/build/partition_table/partition-table.bin
-            examples/get-started/blink/build/flash_args
+          path: ${{ runner.temp }}/blink_flash_bundle
           if-no-files-found: error
